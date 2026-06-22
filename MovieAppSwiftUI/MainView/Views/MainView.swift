@@ -8,33 +8,13 @@
 import SwiftUI
 
 struct MainView: View {
-
-    @State private var searchText: String = ""
-
-    @StateObject private var mainViewModel = MainViewModel()
-
-    @StateObject private var segmentManager = MainSegmentManager()
-
-    let column = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-
-    @State private var selectedMovie: MovieModel? = nil
-
-    @State private var selectedSegment: Int = 0
-
-    @Namespace private var SegmentAnimation
-
-    private let segmentLabel: [String] = ["Now playing", "Upcoming", "Top Rated", "Popular"]
-
-    @Binding var selectedTab: Int
-
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
                 headerView
                 searchView
                 topFiveView
-                segmentView
-                movieGridView
+                SegmentView(shouldRefresh: $refreshSegment)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -45,10 +25,22 @@ struct MainView: View {
         .refreshable {
             await loadData()
         }
-        .onChange(of: selectedSegment) { _, newValue in
-            segmentManager.selectSegment(newValue)
-        }
     }
+
+    @State private var refreshSegment: Bool = false
+
+    @State private var searchText: String = ""
+
+    @StateObject private var mainViewModel = MainViewModel()
+
+    @State private var selectedMovie: MovieModel? = nil
+
+    @Namespace private var SegmentAnimation
+
+    private let segmentLabel: [String] = ["Now playing", "Upcoming", "Top Rated", "Popular"]
+
+    @Binding var selectedTab: Int
+
 }
 
 extension MainView {
@@ -74,9 +66,6 @@ extension MainView {
         .background(Color(.textFieldBackground))
         .cornerRadius(16)
         .foregroundStyle(.white)
-//        .overlay(alignment: .trailing) {
-//
-//        }
         .padding(.horizontal, 18)
         .onTapGesture {
             selectedTab = 1
@@ -119,78 +108,11 @@ extension MainView {
         .frame(height: 230)
     }
 
-    @ViewBuilder
-    private var segmentView: some View {
-        HStack(spacing: 12) {
-            ForEach(Array(segmentLabel.enumerated()), id: \.offset) { index, segment in
-                VStack(spacing: 4) {
-                    Text(segment)
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
-                        .font(.system(size: 16))
-                        .onTapGesture {
-                            selectedSegment = index
-                        }
-                    if selectedSegment == index {
-                        Rectangle()
-                            .frame(height: 2)
-                            .foregroundStyle(.textFieldBackground)
-                            .matchedGeometryEffect(id: "indicator", in: SegmentAnimation)
-                    } else {
-                        Rectangle()
-                            .frame(height: 2)
-                            .foregroundStyle(.clear)
-                    }
-                }
-            }
-        }
-        .padding(.horizontal, 18)
-        .animation(.spring(duration: 0.3), value: selectedSegment)
-
-    }
-
-    @ViewBuilder
-    private var movieGridView: some View {
-        if segmentManager.isLoading {
-            ProgressView()
-                .tint(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.top, 50)
-        } else {
-            LazyVGrid(columns: column, spacing: 13) {
-                ForEach(Array(segmentManager.currentMovieList.enumerated()), id: \.offset) { index, movie in
-                    NavigationLink(destination: DetailView(movie: movie)) {
-                        AsyncImage(url: URL(string: movie.posterFullPath ?? "")) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        } placeholder: {
-                            Color.gray.opacity(0.7)
-                        }
-                        .aspectRatio(2/3, contentMode: .fit)
-                        .cornerRadius(12)
-                    }
-                    .onAppear {
-                        if index == segmentManager.currentMovieList.count - 1 {
-                            segmentManager.loadNextPage()
-                        }
-                    }
-                }
-            }
-            .padding()
-        }
-    }
-
     private func loadData() async {
         try? await Task.sleep(for: .seconds(1.2))
         mainViewModel.topFiveMovie = []
-        segmentManager.nowPlayingVM.movieModel = []
         mainViewModel.getTopRatedMovieList()
-        segmentManager.nowPlayingVM.getMovies()
-        segmentManager.currentSegment = 0
-        selectedSegment = 0
+        refreshSegment.toggle()
     }
 }
 
