@@ -16,17 +16,11 @@ struct AppTabView: View {
         }
         .tint(.strokeText)
         .colorScheme(.light)
-        .background(Color.clear)
     }
+
+    
 
     @State private var selectedTab: Int = 0
-
-    init() {
-        let appearance = UITabBarAppearance()
-        appearance.configureWithTransparentBackground()
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
-    }
 }
 
 // MARK: - Views

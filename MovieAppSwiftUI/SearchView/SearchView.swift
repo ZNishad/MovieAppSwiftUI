@@ -31,10 +31,9 @@ struct SearchView: View {
                 }
             }
         }
-//        .onDisappear {
-//            searchText = ""
-//            searchViewModel.movieList = []
-//        }
+        .onTapGesture {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        }
     }
 
     @State private var searchText: String = ""
