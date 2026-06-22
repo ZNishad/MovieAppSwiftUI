@@ -97,7 +97,8 @@ extension DetailView {
                 .frame(height: screenHeight * 0.27)
 
                 HStack(spacing: 4) {
-                    Image(systemName: "star.fill").foregroundStyle(.orange)
+                    Image(systemName: "star.fill")
+                        .foregroundStyle(.orange)
                     Text(String(format: "%.1f", detailViewModel.movieDetail?.voteAverage ?? 0))
                         .foregroundStyle(.orange)
                         .font(.system(size: 14, weight: .bold))
