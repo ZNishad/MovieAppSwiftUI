@@ -59,8 +59,8 @@ struct DetailView: View {
                     detailViewModel.addToWatchList(movieId: movie.id ?? 0, isSaved: detailViewModel.movieState)
 
                 } label: {
-                    Image(systemName: "bookmark")
-                        .foregroundStyle(detailViewModel.movieState ? .green : .red)
+                    Image(systemName: detailViewModel.movieState ? "bookmark" : "bookmark.fill")
+                        .foregroundStyle(.white)
                 }
             }
             
