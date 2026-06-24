@@ -55,10 +55,12 @@ extension SearchView {
                     .foregroundStyle(.gray)
                     .padding(.trailing, 18)
                     .onTapGesture {
+                        searchViewModel.movieList = []
                         searchViewModel.getSearchMovieList(search: searchText)
                     }
             }
             .onSubmit {
+                searchViewModel.movieList = []
                 searchViewModel.getSearchMovieList(search: searchText)
             }
     }
