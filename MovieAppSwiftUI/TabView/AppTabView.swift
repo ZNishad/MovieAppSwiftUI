@@ -15,7 +15,7 @@ struct AppTabView: View {
             watchListTab
         }
         .tint(.strokeText)
-        .colorScheme(.light)
+        .colorScheme(.dark)
     }
 
     
