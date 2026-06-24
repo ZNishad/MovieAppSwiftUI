@@ -84,7 +84,7 @@ extension MainView {
                                     .resizable()
                                     .scaledToFill()
                             } placeholder: {
-                                Color.gray.opacity(0.3)
+                                Color.gray.opacity(0.7)
                             }
                             .frame(width: 150, height: 210)
                             .cornerRadius(12)
