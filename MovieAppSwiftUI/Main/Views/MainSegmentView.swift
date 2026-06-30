@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SegmentView: View {
+struct MainSegmentView: View {
     var body: some View {
 
         VStack {
@@ -42,7 +42,7 @@ struct SegmentView: View {
     let column = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 }
 
-extension SegmentView {
+extension MainSegmentView {
     @ViewBuilder
     private var segmentView: some View {
         HStack(spacing: 12) {

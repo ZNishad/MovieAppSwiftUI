@@ -14,7 +14,7 @@ struct MainView: View {
                 headerView
                 searchView
                 topFiveView
-                SegmentView(shouldRefresh: $refreshSegment)
+                MainSegmentView(shouldRefresh: $refreshSegment)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
